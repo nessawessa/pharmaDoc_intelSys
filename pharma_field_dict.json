@@ -1,1 +1,80 @@
-
+{
+  "effective_date": [
+    "effective date",
+    "date effective",
+    "eff. date",
+    "eff date",
+    "effective",
+    "effective as of",
+    "as of date",
+    "date of effect",
+    "effective dt"
+  ],
+  "manufacturing_date": [
+    "manufacturing date",
+    "manufacture date",
+    "date of manufacture",
+    "mfg date",
+    "mfg. date",
+    "mfg",
+    "manufactured",
+    "manufacturing dt",
+    "production date"
+  ],
+  "vendor_name": [
+    "vendor name",
+    "vendor",
+    "manufacturer",
+    "manufacturer name",
+    "supplier",
+    "supplier name",
+    "company name",
+    "company",
+    "producer",
+    "manufactured by",
+    "produced by"
+  ],
+  "document_type": [
+    "document type",
+    "doc type",
+    "type of document",
+    "form type",
+    "sdf type",
+    "record type",
+    "doc type",
+    "document category"
+  ],
+  "revision_number": [
+    "revision number",
+    "rev number",
+    "revision",
+    "rev.",
+    "rev",
+    "version",
+    "version number",
+    "rev no.",
+    "revision no."
+  ],
+  "docusign_timestamp": [
+    "docusign timestamp",
+    "signature date",
+    "signed date",
+    "date signed",
+    "sign date",
+    "docusign date",
+    "digital signature date",
+    "signed on",
+    "signature timestamp"
+  ],
+  "company_address": [
+    "company address",
+    "address",
+    "location",
+    "site address",
+    "manufacturing site address",
+    "facility address",
+    "physical address",
+    "address of manufacturer",
+    "site location"
+  ]
+}
