@@ -27,7 +27,7 @@ Future: OCR included
 ### 1 — Clone the repo
 
 ```python
-!git clone https://github.com/<your-org>/sdf-pipeline.git
+!git clone https://github.com/nessawessa/pharmaDoc_intelSys.git
 %cd sdf-pipeline
 ```
 
