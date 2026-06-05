@@ -1,80 +1,85 @@
 {
+  "_comment": [
+    "field_dict.json — synonym dictionary for the SDF extraction pipeline.",
+    "Each key is a canonical field name. Each value is a list of lowercase label",
+    "strings that may appear in a PDF before the field's value.",
+    "Rules:",
+    "  - Add new fields by adding a new top-level key + synonym list.",
+    "  - Synonyms are matched case-insensitively anywhere in a line.",
+    "  - Longer synonyms are matched first, so be specific before being general.",
+    "  - The pipeline also has built-in pattern strategies (revision numbers,",
+    "    address blocks, headings) that do NOT need synonyms here.",
+    "  - This file is merged with built-in defaults at runtime; you only need",
+    "    to list NEW or ADDITIONAL synonyms for existing fields."
+  ],
+
   "effective_date": [
-    "effective date",
-    "date effective",
-    "eff. date",
-    "eff date",
-    "effective",
-    "effective as of",
-    "as of date",
-    "date of effect",
-    "effective dt"
+    "effective date", "effective:", "eff date", "date effective",
+    "document date", "letter date", "issued date",
+    "expiration date", "expiry date", "exp date", "expiration:",
+    "use by", "valid until", "valid through",
+    "date of issue", "issue date"
   ],
+
   "manufacturing_date": [
-    "manufacturing date",
-    "manufacture date",
-    "date of manufacture",
-    "mfg date",
-    "mfg. date",
-    "mfg",
-    "manufactured",
-    "manufacturing dt",
-    "production date"
+    "date of manufacture", "manufacturing date", "manufacture date",
+    "mfg date", "mfg:", "date manufactured", "manufactured on",
+    "date of manufacturing", "production date", "date of production",
+    "manufacture:", "manufactured:", "date of mfg",
+    "date manufactured on", "prod date"
   ],
+
   "vendor_name": [
-    "vendor name",
-    "vendor",
-    "manufacturer",
-    "manufacturer name",
-    "supplier",
-    "supplier name",
-    "company name",
-    "company",
-    "producer",
-    "manufactured by",
-    "produced by"
+    "vendor", "vendor name", "manufacturer", "manufacturer name",
+    "supplier", "supplier name", "manufactured by", "supplied by",
+    "company", "company name", "issued by", "source",
+    "produced by", "made by", "originator", "sponsor"
   ],
+
   "document_type": [
-    "document type",
-    "doc type",
-    "type of document",
-    "form type",
-    "sdf type",
-    "record type",
-    "doc type",
-    "document category"
+    "document type", "doc type", "document title", "title",
+    "subject", "re:", "regarding", "certificate", "form type",
+    "document name", "report type", "type of document",
+    "document classification", "record type"
   ],
+
   "revision_number": [
-    "revision number",
-    "rev number",
-    "revision",
-    "rev.",
-    "rev",
-    "version",
-    "version number",
-    "rev no.",
-    "revision no."
+    "revision", "revision number", "rev", "rev.", "rev no",
+    "revision no", "revision #", "version", "ver.", "version no",
+    "document revision", "doc rev", "amendment", "amendment no",
+    "change level", "issue level"
   ],
+
   "docusign_timestamp": [
-    "docusign timestamp",
-    "signature date",
-    "signed date",
-    "date signed",
-    "sign date",
-    "docusign date",
-    "digital signature date",
-    "signed on",
-    "signature timestamp"
+    "docusign", "approved on", "signed on", "digitally signed",
+    "electronic signature", "esign", "signature date",
+    "approval date", "approved date", "date signed",
+    "timestamp", "time stamp", "authorised on", "authorized on"
   ],
+
   "company_address": [
-    "company address",
-    "address",
-    "location",
-    "site address",
-    "manufacturing site address",
-    "facility address",
-    "physical address",
-    "address of manufacturer",
-    "site location"
+    "address", "company address", "mailing address",
+    "street address", "headquarters", "hq", "location",
+    "site address", "facility address", "registered address",
+    "office address", "business address"
+  ],
+
+  "lot_number": [
+    "lot number", "lot no", "lot no.", "lot#", "lot",
+    "batch number", "batch no", "batch no.", "batch",
+    "control number", "control no", "ctl no"
+  ],
+
+  "product_name": [
+    "product", "product name", "product description",
+    "item", "item description", "article", "material",
+    "component", "description", "product article number",
+    "catalog number", "cat no", "part number", "part no"
+  ],
+
+  "expiration_date": [
+    "expiration date", "expiry date", "exp date", "expiry",
+    "expiration:", "best before", "use before", "use by",
+    "retest date", "shelf life expires"
   ]
 }
