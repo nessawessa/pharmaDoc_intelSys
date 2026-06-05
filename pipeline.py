@@ -1,17 +1,17 @@
 # Single PDF
-  python pipeline.py my_document.pdf
+python pipeline.py my_document.pdf
 
   # Whole folder
-  python pipeline.py /content/pdfs/
+python pipeline.py /content/pdfs/
 
   # With a custom field dictionary
-  python pipeline.py /content/pdfs/ --dict field_dict.json
+python pipeline.py /content/pdfs/ --dict field_dict.json
 
   # Skip annotated images (faster)
-  python pipeline.py /content/pdfs/ --no-annotate
+python pipeline.py /content/pdfs/ --no-annotate
 
   # Higher resolution annotations
-  python pipeline.py my_document.pdf --dpi 200
+python pipeline.py my_document.pdf --dpi 200
 
 Outputs  (written to ./output/ by default)
 ---------
