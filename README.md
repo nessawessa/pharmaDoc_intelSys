@@ -1,7 +1,7 @@
 # pharmaDoc_intelSys
 Document intelligence system that extracts data from PDFs (pharmaceutical), parse for desired fields, and flags compliance risks
 
-# SDF Extraction Pipeline
+## SDF Extraction Pipeline
 
 Current: A lightweight, no-OCR pipeline that extracts key fields from pharmaceutical
 **Site Documentation File (SDF)** PDFs — and similar document types — using
