@@ -1,29 +1,6 @@
-# Single PDF
-python pipeline.py my_document.pdf
-
-  # Whole folder
-python pipeline.py /content/pdfs/
-
-  # With a custom field dictionary
-python pipeline.py /content/pdfs/ --dict field_dict.json
-
-  # Skip annotated images (faster)
-python pipeline.py /content/pdfs/ --no-annotate
-
-  # Higher resolution annotations
-python pipeline.py my_document.pdf --dpi 200
-
-Outputs  (written to ./output/ by default)
----------
-  output/
-    results.csv              -- all extractions, all PDFs, all pages
-    summary.csv              -- one row per PDF: which fields were found
-    <stem>_page01.png        -- annotated page images (one per page per PDF)
-    ...
-
-The pipeline installs its own dependencies on first run so it works
-out-of-the-box in a fresh Google Colab runtime.
-"""
+#!/usr/bin/env python3
+# pipeline.py -- SDF extraction pipeline entry point
+# Usage: !python pipeline.py <pdf_or_folder> [--dict field_dict.json] [--out output] [--dpi 150] [--no-annotate] [--quiet]
 
 from __future__ import annotations
 
@@ -34,18 +11,11 @@ import sys
 from pathlib import Path
 
 
-# ---------------------------------------------------------------------------
-# Dependency bootstrap  (safe to run repeatedly; skips if already installed)
-# ---------------------------------------------------------------------------
-
 def _ensure_dependencies():
-    """Install Python packages and system tools that are missing."""
-    # poppler-utils (provides pdftoppm for page rendering)
     if subprocess.run(["which", "pdftoppm"], capture_output=True).returncode != 0:
-        print("[setup] installing poppler-utils …")
+        print("[setup] installing poppler-utils ...")
         subprocess.run(["apt-get", "install", "-y", "-q", "poppler-utils"], check=True)
 
-    # Python packages
     for pkg, module in [
         ("pdfplumber",             "pdfplumber"),
         ("python-dateutil",        "dateutil"),
@@ -53,7 +23,7 @@ def _ensure_dependencies():
         ("pandas",                 "pandas"),
     ]:
         if importlib.util.find_spec(module) is None:
-            print(f"[setup] installing {pkg} …")
+            print(f"[setup] installing {pkg} ...")
             subprocess.run(
                 [sys.executable, "-m", "pip", "install", "-q",
                  "--break-system-packages", pkg],
@@ -61,48 +31,27 @@ def _ensure_dependencies():
             )
 
 
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
 def main():
-    ap = argparse.ArgumentParser(
-        description="SDF field extraction pipeline",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    ap.add_argument(
-        "input",
-        help="Path to a PDF file, or a directory containing PDF files.",
-    )
-    ap.add_argument(
-        "--dict", default=None, metavar="PATH",
-        help="Path to field_dict.json  (auto-detected if omitted)",
-    )
-    ap.add_argument(
-        "--out", default="output", metavar="DIR",
-        help="Output directory  (default: ./output)",
-    )
-    ap.add_argument(
-        "--dpi", type=int, default=150,
-        help="Render DPI for annotated images  (default: 150)",
-    )
-    ap.add_argument(
-        "--no-annotate", action="store_true",
-        help="Skip writing annotated images  (faster, less disk)",
-    )
-    ap.add_argument(
-        "--quiet", action="store_true",
-        help="Suppress per-field output; only print totals",
-    )
+    ap = argparse.ArgumentParser(description="SDF field extraction pipeline")
+    ap.add_argument("input", help="PDF file or directory of PDFs")
+    ap.add_argument("--dict", default=None, metavar="PATH",
+                    help="Path to field_dict.json (auto-detected if omitted)")
+    ap.add_argument("--out", default="output", metavar="DIR",
+                    help="Output directory (default: ./output)")
+    ap.add_argument("--dpi", type=int, default=150,
+                    help="Render DPI for annotated images (default: 150)")
+    ap.add_argument("--no-annotate", action="store_true",
+                    help="Skip writing annotated images")
+    ap.add_argument("--quiet", action="store_true",
+                    help="Suppress per-field output")
     args = ap.parse_args()
 
     _ensure_dependencies()
 
-    # Import after deps are confirmed present
     import pandas as pd
     from extractor import extract_pdf
 
-    # --- locate input PDFs -------------------------------------------------
+    # Locate input PDFs
     input_path = Path(args.input)
     if input_path.is_dir():
         pdf_files = sorted(input_path.glob("**/*.pdf"))
@@ -116,7 +65,7 @@ def main():
         print(f"ERROR: no PDF files found under {args.input!r}.", file=sys.stderr)
         sys.exit(1)
 
-    # --- resolve field dictionary ------------------------------------------
+    # Resolve field dictionary
     dict_path = args.dict
     if dict_path is None:
         for candidate in [
@@ -127,18 +76,18 @@ def main():
                 dict_path = str(candidate)
                 break
 
-    # --- run extraction ----------------------------------------------------
     output_dir = Path(args.out)
     all_frames: list[pd.DataFrame] = []
 
-    print(f"\n{'='*60}")
-    print(f" SDF Extraction Pipeline")
-    print(f"{'='*60}")
+    sep = "=" * 60
+    print(f"\n{sep}")
+    print(" SDF Extraction Pipeline")
+    print(sep)
     print(f" PDFs found   : {len(pdf_files)}")
     print(f" Field dict   : {dict_path or '(built-ins only)'}")
     print(f" Output dir   : {output_dir}/")
     print(f" Annotate     : {not args.no_annotate}  (DPI={args.dpi})")
-    print(f"{'='*60}\n")
+    print(f"{sep}\n")
 
     for i, pdf in enumerate(pdf_files, 1):
         print(f"[{i}/{len(pdf_files)}] {pdf.name}")
@@ -157,18 +106,15 @@ def main():
             print(f"  [ERROR] could not process {pdf.name}: {exc}")
         print()
 
-    # --- write consolidated outputs ----------------------------------------
     if not all_frames:
         print("No extractions produced.")
         return
 
     combined = pd.concat(all_frames, ignore_index=True)
 
-    # results.csv — every extraction from every page
     results_path = output_dir / "results.csv"
     combined.to_csv(results_path, index=False)
 
-    # summary.csv — pivot: one row per PDF, one column per field
     summary_long = (
         combined.groupby(["source", "field"])["value"]
         .apply(lambda s: " | ".join(s.unique()))
@@ -176,18 +122,14 @@ def main():
         .rename(columns={"value": "values_found"})
     )
     try:
-        pivot = summary_long.pivot(
-            index="source", columns="field", values="values_found"
-        )
+        pivot = summary_long.pivot(index="source", columns="field", values="values_found")
         summary_path = output_dir / "summary.csv"
         pivot.to_csv(summary_path)
     except Exception:
+        pivot = None
         summary_path = output_dir / "summary_long.csv"
         summary_long.to_csv(summary_path, index=False)
-        pivot = None
 
-    # --- final report ------------------------------------------------------
-    sep = "=" * 60
     print(sep)
     print(" Extraction complete")
     print(sep)
@@ -206,7 +148,7 @@ def main():
 
     if pivot is not None:
         print("\nSummary table:\n")
-        print(pivot.fillna("—").to_string())
+        print(pivot.fillna("-").to_string())
         print()
 
 
