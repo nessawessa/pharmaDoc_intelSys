@@ -14,16 +14,13 @@ import pandas as pd
 import pdfplumber
 from dateutil import parser as dateutil_parser
 
-# ---------------------------------------------------------------------------
+
 # Built-in synonym dictionary  (always loaded; external dict merged on top)
-# ---------------------------------------------------------------------------
 
 BUILTIN_SYNONYMS: dict[str, list[str]] = {
     "effective_date": [
         "effective date", "effective:", "eff date", "date effective",
-        "document date", "letter date", "date:", "issued date",
-        "expiration date", "expiry date", "exp date", "expiration:",
-        "use by", "valid until", "valid through",
+        "document date", "letter date", "date:", "issued date"
     ],
     "manufacturing_date": [
         "date of manufacture", "manufacturing date", "manufacture date",
@@ -70,7 +67,8 @@ BUILTIN_SYNONYMS: dict[str, list[str]] = {
     ],
     "expiration_date": [
         "expiration date", "expiry date", "exp date", "expiry",
-        "expiration:", "best before", "use before", "retest date",
+        "expiration:", "best before", "use before", "retest date", 
+        "valid unitl", "valid through"
     ],
 }
 
@@ -89,9 +87,9 @@ FIELD_COLOURS: dict[str, tuple[int, int, int]] = {
 }
 
 
-# ---------------------------------------------------------------------------
+
 # load_synonyms
-# ---------------------------------------------------------------------------
+
 
 def load_synonyms(json_path: str | Path | None = None) -> dict[str, list[str]]:
     """
@@ -123,9 +121,7 @@ def load_synonyms(json_path: str | Path | None = None) -> dict[str, list[str]]:
     return {f: [s.lower() for s in syns] for f, syns in merged.items()}
 
 
-# ---------------------------------------------------------------------------
 # Date helpers
-# ---------------------------------------------------------------------------
 
 _DATE_PATS = [
     re.compile(r"\b(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\b"),
@@ -155,10 +151,7 @@ def normalise_date(raw: str) -> str:
     except Exception:
         return raw
 
-
-# ---------------------------------------------------------------------------
 # Bounding-box + line helpers
-# ---------------------------------------------------------------------------
 
 def merge_boxes(boxes: list[tuple]) -> tuple[float, float, float, float]:
     return (min(b[0] for b in boxes), min(b[1] for b in boxes),
@@ -188,10 +181,7 @@ def line_text(line: list[dict]) -> str:
     return " ".join(w["text"] for w in line)
 
 
-# ---------------------------------------------------------------------------
 # PageExtractor
-# ---------------------------------------------------------------------------
-
 class PageExtractor:
     """
     Extract target fields from a single pdfplumber page using three
@@ -506,9 +496,7 @@ def _method_confidence(method: str) -> str:
     }.get(method, "low")
 
 
-# ---------------------------------------------------------------------------
 # Rendering + annotation
-# ---------------------------------------------------------------------------
 
 def render_page(pdf_path: str | Path, page_num: int, dpi: int = 150) -> np.ndarray:
     """Render one page to a BGR NumPy image via pdftoppm (poppler-utils)."""
@@ -556,9 +544,7 @@ def annotate_image(
     return out
 
 
-# ---------------------------------------------------------------------------
 # Main extraction function
-# ---------------------------------------------------------------------------
 
 def extract_pdf(
     pdf_path: str | Path,
