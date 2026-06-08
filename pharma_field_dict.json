@@ -16,8 +16,6 @@
   "effective_date": [
     "effective date", "effective:", "eff date", "date effective",
     "document date", "letter date", "issued date",
-    "expiration date", "expiry date", "exp date", "expiration:",
-    "use by", "valid until", "valid through",
     "date of issue", "issue date"
   ],
 
@@ -80,6 +78,7 @@
   "expiration_date": [
     "expiration date", "expiry date", "exp date", "expiry",
     "expiration:", "best before", "use before", "use by",
-    "retest date", "shelf life expires"
+    "retest date", "shelf life expires", "valid until", "valid through", 
+    "retest date"
   ]
 }
