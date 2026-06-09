@@ -15,62 +15,21 @@ import pdfplumber
 from dateutil import parser as dateutil_parser
 
 
-# Built-in synonym dictionary  (always loaded; external dict merged on top)
+# Load pharma–field–dict 
 
-BUILTIN_SYNONYMS: dict[str, list[str]] = {
-    "effective_date": [
-        "effective date", "effective:", "eff date", "date effective",
-        "document date", "letter date", "date:", "issued date"
-    ],
-    "manufacturing_date": [
-        "date of manufacture", "manufacturing date", "manufacture date",
-        "mfg date", "mfg:", "date manufactured", "manufactured on",
-        "date of manufacturing", "production date", "date of production",
-        "manufacture:", "manufactured:", "date of mfg",
-    ],
-    "vendor_name": [
-        "vendor", "vendor name", "manufacturer", "manufacturer name",
-        "supplier", "supplier name", "manufactured by", "supplied by",
-        "company", "company name", "issued by", "source",
-        "produced by", "made by",
-    ],
-    "document_type": [
-        "document type", "doc type", "document title", "title",
-        "subject", "re:", "regarding", "certificate", "form type",
-        "document name", "report type", "type of document",
-    ],
-    "revision_number": [
-        "revision", "revision number", "rev", "rev.", "rev no",
-        "revision no", "revision #", "version", "ver.", "version no",
-        "document revision", "doc rev",
-    ],
-    "docusign_timestamp": [
-        "docusign", "approved on", "signed on", "digitally signed",
-        "electronic signature", "esign", "signature date",
-        "approval date", "approved date", "date signed",
-        "timestamp", "time stamp",
-    ],
-    "company_address": [
-        "address", "company address", "mailing address",
-        "street address", "headquarters", "hq", "location",
-        "site address", "facility address",
-    ],
-    "lot_number": [
-        "lot number", "lot no", "lot no.", "lot#", "lot",
-        "batch number", "batch no", "batch no.", "batch",
-        "control number", "control no",
-    ],
-    "product_name": [
-        "product", "product name", "product description",
-        "item", "item description", "description",
-        "catalog number", "cat no", "part number",
-    ],
-    "expiration_date": [
-        "expiration date", "expiry date", "exp date", "expiry",
-        "expiration:", "best before", "use before", "retest date", 
-        "valid unitl", "valid through"
-    ],
-}
+def load_synonyms(json_path):
+    if not json_path or not Path(json_path).exists():
+        raise FileNotFoundError(
+            "field_dict.json not found. "
+            "Make sure it is in the same folder as pipeline.py."
+        )
+    with open(json_path) as f:
+        data = json.load(f)
+    return {
+        k: [s.lower() for s in v]
+        for k, v in data.items()
+        if not k.startswith("_")
+    }
 
 # Annotation colours (BGR).  Unknown fields get green.
 FIELD_COLOURS: dict[str, tuple[int, int, int]] = {
