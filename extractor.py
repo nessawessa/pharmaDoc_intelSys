@@ -16,7 +16,6 @@ from dateutil import parser as dateutil_parser
 
 
 # Load pharma–field–dict 
-
 def load_synonyms(json_path):
     if not json_path or not Path(json_path).exists():
         raise FileNotFoundError(
