@@ -9,7 +9,7 @@
     "  - Longer synonyms are matched first, so be specific before being general.",
     "  - The pipeline also has built-in pattern strategies (revision numbers,",
     "    address blocks, headings) that do NOT need synonyms here.",
-    "  - This file is merged with built-in defaults at runtime; you only need",
+    "  - This file is merged; you only need",
     "    to list NEW or ADDITIONAL synonyms for existing fields."
   ],
 
