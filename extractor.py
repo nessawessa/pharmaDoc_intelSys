@@ -46,40 +46,6 @@ FIELD_COLOURS: dict[str, tuple[int, int, int]] = {
 }
 
 
-
-# load_synonyms
-
-
-def load_synonyms(json_path: str | Path | None = None) -> dict[str, list[str]]:
-    """
-    Return the merged synonym dictionary.
-
-    Built-in synonyms are always included.  Pass *json_path* to overlay
-    additional synonyms from field_dict.json.  Keys in the external file
-    that don't exist in the built-ins create brand-new fields automatically.
-
-    The external JSON may contain a ``"_comment"`` key — it is ignored.
-    """
-    merged = {k: list(v) for k, v in BUILTIN_SYNONYMS.items()}
-
-    if json_path:
-        p = Path(json_path)
-        if p.exists() and p.stat().st_size > 4:
-            with open(p) as fh:
-                external: dict = json.load(fh)
-            for field, synonyms in external.items():
-                if field.startswith("_"):
-                    continue
-                key = field.lower().replace(" ", "_")
-                bucket = merged.setdefault(key, [])
-                for s in synonyms:
-                    sl = s.lower()
-                    if sl not in bucket:
-                        bucket.append(sl)
-
-    return {f: [s.lower() for s in syns] for f, syns in merged.items()}
-
-
 # Date helpers
 
 _DATE_PATS = [
