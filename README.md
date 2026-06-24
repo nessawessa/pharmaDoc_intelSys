@@ -8,7 +8,7 @@ Current: A lightweight, no-OCR pipeline that extracts key fields from pharmaceut
 pdfplumber, regex, and spatial heuristics.
 
 Future: OCR included
-
+ (See Architecture Flow doc for system mapping)
 
 ---
 
